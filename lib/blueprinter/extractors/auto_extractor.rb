@@ -4,6 +4,7 @@ module Blueprinter
     include EmptyTypes
 
     def initialize
+      @static_extractor = StaticExtractor
       @hash_extractor = HashExtractor.new
       @public_send_extractor = PublicSendExtractor.new
       @block_extractor = BlockExtractor.new
@@ -23,7 +24,9 @@ module Blueprinter
     end
 
     def extractor(object, options)
-      if options[:block]
+      if options.has_key?(:static)
+        @static_extractor
+      elsif options[:block]
         @block_extractor
       elsif object.is_a?(Hash)
         @hash_extractor
